@@ -1,7 +1,7 @@
 # Useful media:
     # Python post requests: https://gist.github.com/JeffPaine/3145490
     # Intro: https://medium.com/analytics-vidhya/getting-started-with-github-api-dc7057e2834d
-    # Token: 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
+    # Token: 
 
 import json
 import requests
@@ -9,7 +9,7 @@ import requests
 
 user = "jacobPenney"
 repo = "texts"
-token = "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"
+token = ""
 issue_number = 2
 request_headers = { "Authorization" : "token {}".format( token ) } 
  
@@ -39,7 +39,7 @@ def main(  ):
 def create_issue():
     user = "jacobPenney"
     repo = "texts"
-    token = "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"
+    token = ""
     request_headers = { "Authorization" : "token {}".format( token ) } 
      
     url_base = "https://api.github.com/"
@@ -64,7 +64,7 @@ def create_issue():
 def add_labels():
     user = "jacobPenney"
     repo = "texts"
-    token = "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"
+    token = ""
     issue_number = 1
     request_headers = { 
                         'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ def add_labels():
 def remove_labels():
     user = "jacobPenney"
     repo = "texts"
-    token = "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"
+    token = ""
     issue_number = 1
     request_headers = { 
                         'Content-Type': 'application/json',
