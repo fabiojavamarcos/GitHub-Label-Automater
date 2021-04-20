@@ -9,21 +9,18 @@
 # ---------------------------------------------------------------------------
 
 
-
-
-# TODO:
-    # 1. add provision to accept first value of each row as issue number
-        # 
-    # 2. implement api calls
-    # 3. clean up variable names
-
-
-
-
+import json
+import requests
 from sys import argv
 
+# constants
+API_URL = "https://api.github.com/"
+COMMA = ","
+NEW_LINE = "\n"
+READ = "r"
+ 
 
-
+     
 
 # ---------------------------------------------------------------------------
 # Function: driver
@@ -37,24 +34,19 @@ from sys import argv
 # ---------------------------------------------------------------------------
 def main():
 
-    fileToOpen = argv[1]
+    input_file_to_open = argv[1]
+    userinfo_file_to_open = argv[2]
 
-    # get metalist of inputs
-    api_input_list = create_input_list( fileToOpen )
+    # get user info
+    userinfo_list = read_user_info( userinfo_file_to_open )
+
+
+    # get metalist of input
+    api_input_list = create_input_list( input_file_to_open )
+
 
     # create dictionary of labels
     label_dictionary = create_dictionary( api_input_list )
-
-
-    # Dictionary 
-    # print( "\n Dictionary of labels:" )
-    # print( label_dictionary )
-    # print()
-    
-    # list before parsing
-    # for list in api_input_list:
-    #     print( list )
-    # print() 
 
 
     # create metalist of labels to send to github api
@@ -65,7 +57,10 @@ def main():
     for row in label_metalist:
         print( row )
 
+
     # send label metalist to be processed by github api
+    create_label_calls( userinfo_list, label_metalist )
+
 
 
 
@@ -103,6 +98,58 @@ def create_dictionary( input_list ):
 
 
 
+
+# ---------------------------------------------------------------------------
+# Function: create_label_calls
+# Process: makes calls to github api to add given labels to appropriate issues
+# Parameters: list of user info to validate api calls, lists of labels and
+#             their corresponding issue number
+# Postcondition: github labels are added to corresponding issues
+# Exceptions: none
+# Note: none
+# ---------------------------------------------------------------------------
+
+def create_label_calls( list_of_userinfo, label_lists ):
+    
+    # initialize variables
+    issue_num = None
+    user_handle = list_of_userinfo[0]
+    user_token = list_of_userinfo[1]
+ 
+    request_headers = { 
+                        'Content-Type': 'application/json',
+                        "Authorization" : "token {}".format( user_token ) 
+                      } 
+     
+
+
+    repo_name = input( "What repository would you like to add labels to?" )
+    print(  )
+
+    # loop through metalist of labels
+    for label_list in label_lists:
+
+        # gather issue and label info
+        issue_num = label_list[0]
+        label_str_list = label_list[1]
+
+        # complete API call URL
+        labels_api = "repos/%s/%s/issues/%s/labels" % ( 
+                                        user_handle, repo_name, issue_num )
+        call_url = API_URL + labels_api
+
+        # serialize label strings into JSON stream 
+        payload = json.dumps( [label_str_list] )
+
+        # send issues to Github API
+        request_outcome = requests.put( call_url, payload, 
+                                        headers = request_headers ) 
+
+        print( request_outcome )
+
+
+
+
 # ---------------------------------------------------------------------------
 # Function: create_input_list 
 # Process: accepts the name of a file to open, opens the file, reads it's
@@ -116,10 +163,6 @@ def create_dictionary( input_list ):
 def create_input_list( fileToOpen ):
  
     # variables
-    COMMA = ","
-    NEW_LINE = "\n"
-    READ = "r"
-
     loopCounter = 0
     api_list_of_rows = []
     issue_num_list = []
@@ -191,15 +234,15 @@ def parse_input_lists( input_metalist, label_dict ):
     # loop through each list in metalist
     for row in input_metalist:
 
+        # reset variables on each pass
+        row_index = 0
+        label_list = [] 
+
         # capture issue number
         issue_num = row[0]
 
         # capture internal list of inputs
         binary_input_list = row[1]
-
-        # reset variables on each pass
-        row_index = 0
-        label_list = []
 
         # loop through every item in each list
         while row_index < len( binary_input_list ):
@@ -222,6 +265,40 @@ def parse_input_lists( input_metalist, label_dict ):
 
 
 
+
+# ---------------------------------------------------------------------------
+# Function: read_user_info
+# Process: open the provided text file, read out user info, and return it
+# Parameters: text file containing user info
+# Postcondition: returns variables holding user info
+# Exceptions: none
+# Note: none
+# ---------------------------------------------------------------------------
+def read_user_info( userinfo_file ):
+
+    # variables
+    userinfo = None
+    parsed_userinfo_list = []
+
+
+    # open text file
+    userinfo_file_obj = open( userinfo_file, READ )
+
+    # read contents out of file object
+    userinfo_list = userinfo_file_obj.readlines()
+
+    # loop through items in list 
+    for value in userinfo_list:
+        
+        # remove newline chars from each item in list
+        newLine_stripped_value = value.strip( NEW_LINE )
+        
+        # place each item into a new list if it has content
+        if len( newLine_stripped_value ) > 0:
+            parsed_userinfo_list.append( newLine_stripped_value )
+
+
+    return userinfo
 
 
 
