@@ -13,9 +13,7 @@
 
 # TODO:
     # 1. add provision to accept first value of each row as issue number
-        # might allow us to rethink algorithm
-            # e.g. 
-
+        # 
     # 2. implement api calls
     # 3. clean up variable names
 
@@ -113,7 +111,11 @@ def create_input_list( fileToOpen ):
     COMMA = ","
     NEW_LINE = "\n"
     READ = "r"
+
+    loopCounter = 0
     api_list_of_rows = []
+    issue_num_list = []
+    row_list = []
 
 
     # open file
@@ -130,10 +132,21 @@ def create_input_list( fileToOpen ):
         newLine_stripped_line = line.strip( NEW_LINE )
 
         # strip lines on commas to create list of items
-        line_list = newLine_stripped_line.split( COMMA )
+        row_list = newLine_stripped_line.split( COMMA )
+
+        # if current row is not the label row, we want to segment row into two
+        # lists: one contains the issue number and the other is the list of
+        # inputs
+        if loopCounter > 0:
+            issue_num_list = row_list[0]
+            input_list = row_list[1:]
+            row_list = [ issue_num_list, input_list]
+
 
         # appent list of inputs to metalist of inputs
-        api_list_of_rows.append( line_list )
+        api_list_of_rows.append( row_list )
+
+        loopCounter += 1
 
 
     # close file 
