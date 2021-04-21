@@ -11,8 +11,14 @@
 !_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210131.0/
 API_URL	txt_parser.py	/^API_URL = "https:\/\/api.github.com\/"$/;"	v
 COMMA	txt_parser.py	/^COMMA = ","$/;"	v
+FAIL_STR	txt_parser.py	/^FAIL_STR = "Label addition unsuccessful!"$/;"	v
+ISSUE_NUM_STR	txt_parser.py	/^ISSUE_NUM_STR = "\\n   - issue number: " $/;"	v
+LABEL_STR	txt_parser.py	/^LABEL_STR = "\\n   - Labels: "$/;"	v
 NEW_LINE	txt_parser.py	/^NEW_LINE = "\\n"$/;"	v
 READ	txt_parser.py	/^READ = "r"$/;"	v
+REPO_STR	txt_parser.py	/^REPO_STR = "\\n   - repo: "$/;"	v
+SUCCESS_STATUS	txt_parser.py	/^SUCCESS_STATUS = 200$/;"	v
+SUCCESS_STR	txt_parser.py	/^SUCCESS_STR = "\\nLabels successfully added:"$/;"	v
 add_labels	github_api_utils.py	/^def add_labels():$/;"	f
 create_dictionary	txt_parser.py	/^def create_dictionary( input_list ):$/;"	f
 create_input_list	txt_parser.py	/^def create_input_list( fileToOpen ):$/;"	f

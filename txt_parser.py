@@ -16,8 +16,14 @@ from sys import argv
 # constants
 API_URL = "https://api.github.com/"
 COMMA = ","
+FAIL_STR = "Label addition unsuccessful!"
+ISSUE_NUM_STR = "\n   - issue number: " 
+LABEL_STR = "\n   - Labels: "
 NEW_LINE = "\n"
 READ = "r"
+REPO_STR = "\n   - repo: "
+SUCCESS_STATUS = 200
+SUCCESS_STR = "\nLabels successfully added:"
  
 
      
@@ -53,14 +59,8 @@ def main():
     label_metalist = parse_input_lists( api_input_list, label_dictionary )
 
 
-    # label_metalist
-    for row in label_metalist:
-        print( row )
-
-
     # send label metalist to be processed by github api
     create_label_calls( userinfo_list, label_metalist )
-
 
 
 
@@ -113,7 +113,9 @@ def create_label_calls( list_of_userinfo, label_lists ):
     
     # initialize variables
     issue_num = None
-    request_outcome = None
+    label_str = None
+    output_str = None
+    request_outcome = None                   
     user_handle = list_of_userinfo[0]
     user_token = list_of_userinfo[1]
  
@@ -123,7 +125,7 @@ def create_label_calls( list_of_userinfo, label_lists ):
                       } 
      
     # get repo name to add issues to
-    repo_name = input( "What repository would you like to add labels to?\n" )
+    repo_name = input( "\nWhat repository would you like to add labels to? " )
 
 
     # loop through metalist of labels
@@ -146,7 +148,23 @@ def create_label_calls( list_of_userinfo, label_lists ):
         request_outcome = requests.put( call_url, data = payload, 
                                             headers = request_headers ) 
 
-        print( request_outcome )
+        # return outcome
+        if request_outcome.status_code == SUCCESS_STATUS:
+            
+            # create string of labels
+            label_str = ", ".join( label_str_list )
+
+            # create string to output to user
+            output_str = SUCCESS_STR + LABEL_STR + label_str
+            output_str += ISSUE_NUM_STR + issue_num 
+            output_str += REPO_STR + repo_name
+
+        
+        else:
+            output_str = FAIL_STR
+
+
+        print( output_str )
 
 
 
