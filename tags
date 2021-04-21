@@ -9,16 +9,22 @@
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210131.0/
+API_URL	txt_parser.py	/^API_URL = "https:\/\/api.github.com\/"$/;"	v
+COMMA	txt_parser.py	/^COMMA = ","$/;"	v
+NEW_LINE	txt_parser.py	/^NEW_LINE = "\\n"$/;"	v
+READ	txt_parser.py	/^READ = "r"$/;"	v
 add_labels	github_api_utils.py	/^def add_labels():$/;"	f
 create_dictionary	txt_parser.py	/^def create_dictionary( input_list ):$/;"	f
 create_input_list	txt_parser.py	/^def create_input_list( fileToOpen ):$/;"	f
 create_issue	github_api_utils.py	/^def create_issue():$/;"	f
+create_label_calls	txt_parser.py	/^def create_label_calls( list_of_userinfo, label_lists ):$/;"	f
 issue_number	github_api_utils.py	/^issue_number = 2$/;"	v
 issues_api	github_api_utils.py	/^issues_api = "repos\/%s\/%s\/issues" % ( user, repo ) $/;"	v
 labels_api	github_api_utils.py	/^labels_api = issues_api + "%s\/labels" % ( issue_number )$/;"	v
 main	github_api_utils.py	/^def main(  ):$/;"	f
 main	txt_parser.py	/^def main():$/;"	f
 parse_input_lists	txt_parser.py	/^def parse_input_lists( input_metalist, label_dict ):$/;"	f
+read_user_info	txt_parser.py	/^def read_user_info( userinfo_file ):$/;"	f
 remove_labels	github_api_utils.py	/^def remove_labels():$/;"	f
 repo	github_api_utils.py	/^repo = "texts"$/;"	v
 request_headers	github_api_utils.py	/^request_headers = { "Authorization" : "token {}".format( token ) } $/;"	v
