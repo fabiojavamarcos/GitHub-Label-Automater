@@ -113,6 +113,7 @@ def create_label_calls( list_of_userinfo, label_lists ):
     
     # initialize variables
     issue_num = None
+    request_outcome = None
     user_handle = list_of_userinfo[0]
     user_token = list_of_userinfo[1]
  
@@ -130,25 +131,20 @@ def create_label_calls( list_of_userinfo, label_lists ):
 
         # gather issue and label info
         issue_num = label_list[0]
-        print()
-        print( issue_num )
-
         label_str_list = label_list[1]
-        print( label_str_list )
-        print()
-
 
         # complete API call URL
         labels_api = "repos/%s/%s/issues/%s/labels" % ( 
                                         user_handle, repo_name, issue_num )
+
         call_url = API_URL + labels_api
 
         # serialize label strings into JSON stream 
         payload = json.dumps( label_str_list )
 
-        # send issues to Github API
+        # send labels to Github API
         request_outcome = requests.put( call_url, data = payload, 
-                                        headers = request_headers ) 
+                                            headers = request_headers ) 
 
         print( request_outcome )
 
