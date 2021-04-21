@@ -18,7 +18,7 @@ issues_api	github_api_utils.py	/^issues_api = "repos\/%s\/%s\/issues" % ( user, 
 labels_api	github_api_utils.py	/^labels_api = issues_api + "%s\/labels" % ( issue_number )$/;"	v
 main	github_api_utils.py	/^def main(  ):$/;"	f
 main	txt_parser.py	/^def main():$/;"	f
-parse_input_lists	txt_parser.py	/^def parse_input_lists( input_list, label_dict ):$/;"	f
+parse_input_lists	txt_parser.py	/^def parse_input_lists( input_metalist, label_dict ):$/;"	f
 remove_labels	github_api_utils.py	/^def remove_labels():$/;"	f
 repo	github_api_utils.py	/^repo = "texts"$/;"	v
 request_headers	github_api_utils.py	/^request_headers = { "Authorization" : "token {}".format( token ) } $/;"	v

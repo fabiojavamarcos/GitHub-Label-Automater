@@ -42,22 +42,30 @@ def main():
     # get metalist of inputs
     api_input_list = create_input_list( fileToOpen )
 
-    print("\nList of lists of inputs:")
-    for list in api_input_list:
-        print( list )
-    print()
-
-
     # create dictionary of labels
     label_dictionary = create_dictionary( api_input_list )
-    print( "\n Dictionary of labels:" )
-    print( label_dictionary )
-    print()
 
+
+    # Dictionary 
+    # print( "\n Dictionary of labels:" )
+    # print( label_dictionary )
+    # print()
+    
+    # list before parsing
+    # for list in api_input_list:
+    #     print( list )
+    # print() 
 
 
     # create metalist of labels to send to github api
-    # parse_input_lists( api_input_list, label_dictionary )
+    label_metalist = parse_input_lists( api_input_list, label_dictionary )
+
+
+    # label_metalist
+    for row in label_metalist:
+        print( row )
+
+    # send label metalist to be processed by github api
 
 
 
@@ -169,34 +177,48 @@ def create_input_list( fileToOpen ):
 # Exceptions: none
 # Note: none
 # ---------------------------------------------------------------------------
-def parse_input_lists( input_list, label_dict ):
+def parse_input_lists( input_metalist, label_dict ):
 
     # variables
+    binary_input_list = None
+    issue_num = None
+    label_list = None
     label_metalist = []
+    row_index = None
+    row_label_list = []
 
 
     # loop through each list in metalist
-    for row in input_list:
+    for row in input_metalist:
+
+        # capture issue number
+        issue_num = row[0]
+
+        # capture internal list of inputs
+        binary_input_list = row[1]
 
         # reset variables on each pass
         row_index = 0
         label_list = []
 
         # loop through every item in each list
-        while row_index < len( row ):
+        while row_index < len( binary_input_list ):
 
             # if item in list is "1", we add the corresponding label
             # from the label dictionary to the list of labels to output
-            if row[row_index] == "1":
+            if binary_input_list[row_index] == "1":
                 label_list.append( label_dict[row_index] )
 
             row_index += 1
 
+
         # append list of labels to label metalist to output
         if len( label_list ) > 0:
-            label_metalist.append( label_list )
+            row_label_list = [issue_num, label_list]
+            label_metalist.append( row_label_list )
 
-        print( label_metalist )
+
+    return label_metalist
 
 
 
