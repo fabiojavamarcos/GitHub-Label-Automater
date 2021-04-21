@@ -23,7 +23,7 @@ NEW_LINE = "\n"
 READ = "r"
 REPO_STR = "\n   - repo: "
 SUCCESS_STATUS = 200
-SUCCESS_STR = "\nLabels successfully added:"
+SUCCESS_STR = "\nLabel addition successful!"
  
 
      
