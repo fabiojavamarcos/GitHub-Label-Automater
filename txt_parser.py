@@ -327,31 +327,3 @@ def read_user_info( userinfo_file ):
 # start main
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
