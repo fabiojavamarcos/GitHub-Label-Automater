@@ -113,6 +113,7 @@ def create_label_calls( list_of_userinfo, label_lists ):
     
     # initialize variables
     issue_num = None
+    request_outcome = None
     user_handle = list_of_userinfo[0]
     user_token = list_of_userinfo[1]
  
@@ -121,10 +122,9 @@ def create_label_calls( list_of_userinfo, label_lists ):
                         "Authorization" : "token {}".format( user_token ) 
                       } 
      
+    # get repo name to add issues to
+    repo_name = input( "What repository would you like to add labels to?\n" )
 
-
-    repo_name = input( "What repository would you like to add labels to?" )
-    print(  )
 
     # loop through metalist of labels
     for label_list in label_lists:
@@ -136,14 +136,15 @@ def create_label_calls( list_of_userinfo, label_lists ):
         # complete API call URL
         labels_api = "repos/%s/%s/issues/%s/labels" % ( 
                                         user_handle, repo_name, issue_num )
+
         call_url = API_URL + labels_api
 
         # serialize label strings into JSON stream 
-        payload = json.dumps( [label_str_list] )
+        payload = json.dumps( label_str_list )
 
-        # send issues to Github API
-        request_outcome = requests.put( call_url, payload, 
-                                        headers = request_headers ) 
+        # send labels to Github API
+        request_outcome = requests.put( call_url, data = payload, 
+                                            headers = request_headers ) 
 
         print( request_outcome )
 
@@ -277,7 +278,6 @@ def parse_input_lists( input_metalist, label_dict ):
 def read_user_info( userinfo_file ):
 
     # variables
-    userinfo = None
     parsed_userinfo_list = []
 
 
@@ -293,12 +293,15 @@ def read_user_info( userinfo_file ):
         # remove newline chars from each item in list
         newLine_stripped_value = value.strip( NEW_LINE )
         
+        # remove leading and trailing whitespaces from user info
+        space_stripped_value = newLine_stripped_value.strip()
+
         # place each item into a new list if it has content
-        if len( newLine_stripped_value ) > 0:
-            parsed_userinfo_list.append( newLine_stripped_value )
+        if len( space_stripped_value ) > 0:
+            parsed_userinfo_list.append( space_stripped_value )
 
 
-    return userinfo
+    return parsed_userinfo_list
 
 
 
