@@ -17,14 +17,14 @@ from sys import argv
 API_URL = "https://api.github.com/"
 COMMA = ","
 FAIL_STR = "Label addition unsuccessful!"
-ISSUE_NUM_STR = "\n   - issue number: " 
-LABEL_STR = "\n   - Labels: "
 NEW_LINE = "\n"
 READ = "r"
-REPO_STR = "\n   - repo: "
 SUCCESS_STATUS = 200
-SUCCESS_STR = "\nLabel addition successful!"
+SUCCESS_STR = """\nLabel addition successful!\n   - Labels: %s   
+   - issue number: %s\n   - repo: %s"""
  
+
+
 
      
 
@@ -113,6 +113,7 @@ def create_label_calls( list_of_userinfo, label_lists ):
     
     # initialize variables
     issue_num = None
+    issue_num_str = None
     label_str = None
     output_str = None
     request_outcome = None                   
@@ -136,7 +137,7 @@ def create_label_calls( list_of_userinfo, label_lists ):
         label_str_list = label_list[1]
 
         # complete API call URL
-        labels_api = "repos/%s/%s/issues/%s/labels" % ( 
+        labels_api = "repos/%s/%s/issues/%s/labels" %( 
                                         user_handle, repo_name, issue_num )
 
         call_url = API_URL + labels_api
@@ -155,9 +156,8 @@ def create_label_calls( list_of_userinfo, label_lists ):
             label_str = ", ".join( label_str_list )
 
             # create string to output to user
-            output_str = SUCCESS_STR + LABEL_STR + label_str
-            output_str += ISSUE_NUM_STR + issue_num 
-            output_str += REPO_STR + repo_name
+            issue_num_str = str( issue_num )
+            output_str = SUCCESS_STR %( label_str, issue_num_str, repo_name )
 
         
         else:
@@ -327,3 +327,5 @@ def read_user_info( userinfo_file ):
 # start main
 if __name__ == "__main__":
     main()
+
+ 
