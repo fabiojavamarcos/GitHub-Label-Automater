@@ -8,13 +8,6 @@
 # 
 # ---------------------------------------------------------------------------
 
-# TODO:
-    # add flags to determine type of https request
-        # e.g. "-r" for "replace", meaning PUT request
-        # "-u" for "update", meaning POST request
-        # investigate argparse
-
-
 
 import argparse
 import json
