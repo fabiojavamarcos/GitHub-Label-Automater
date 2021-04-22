@@ -18,7 +18,7 @@ NEW_LINE	txt_parser.py	/^NEW_LINE = "\\n"$/;"	v
 READ	txt_parser.py	/^READ = "r"$/;"	v
 REPO_STR	txt_parser.py	/^REPO_STR = "\\n   - repo: "$/;"	v
 SUCCESS_STATUS	txt_parser.py	/^SUCCESS_STATUS = 200$/;"	v
-SUCCESS_STR	txt_parser.py	/^SUCCESS_STR = "\\nLabels successfully added:"$/;"	v
+SUCCESS_STR	txt_parser.py	/^SUCCESS_STR = "\\nLabel addition successful!"$/;"	v
 add_labels	github_api_utils.py	/^def add_labels():$/;"	f
 create_dictionary	txt_parser.py	/^def create_dictionary( input_list ):$/;"	f
 create_input_list	txt_parser.py	/^def create_input_list( fileToOpen ):$/;"	f
