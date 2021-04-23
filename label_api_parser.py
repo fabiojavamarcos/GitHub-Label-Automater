@@ -27,8 +27,6 @@ SUCCESS_STR    = """\nLabel addition successful!\n   - Labels: %s
 
 
 
-     
-
 # ---------------------------------------------------------------------------
 # Function: driver
 # Process: accepts input file; opens, reads, and parses contents; creates
@@ -123,7 +121,6 @@ def create_dictionary( input_list ):
 
 
 
-
 # ---------------------------------------------------------------------------
 # Function: create_label_calls
 # Process: makes calls to github api to add given labels to appropriate issues
@@ -180,7 +177,7 @@ def create_label_calls( request_type, list_of_userinfo, label_lists ):
         # return outcome
         if request_outcome.status_code == SUCCESS_STATUS:
             
-            # create string of labels
+            # create string of labels from list of labels
             label_str = ", ".join( label_str_list )
 
             # create string to output to user
