@@ -1,6 +1,6 @@
 ---
 name: Minimal bug report
-about: Create a report to help us improve
+about: Minimal bug report template for simple issues
 title: ''
 labels: bug
 assignees: jacobPenney
