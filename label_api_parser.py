@@ -19,7 +19,6 @@
 import argparse
 import json
 import requests
-from requests import api
 
 
 # constants
@@ -54,6 +53,7 @@ def main():
     arg_parser = argparse.ArgumentParser( description="""Automated Github
             issue label assignment""" )
 
+
     # add requisite arguments
     arg_parser.add_argument( '-t', '--request_type', type=str, help="""The type
             of request to make to the Github API. Valid responses are:
@@ -66,7 +66,7 @@ def main():
             file containing user authentification info""" )
 
 
-    # retrieve positional arguments
+    # retrieve positional arguments as variables
     CLI_args = arg_parser.parse_args()
 
     request_type = CLI_args.request_type
@@ -74,7 +74,6 @@ def main():
     input_file_to_open = CLI_args.input_file
 
     userauth_file_to_open = CLI_args.auth_file
-
 
 
     # get user info
