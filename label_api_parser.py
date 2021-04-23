@@ -15,12 +15,11 @@ import requests
 
 
 # constants
-API_URL        = "https://api.github.com/"
-COMMA          = ","
+API_URL        = "https://api.github.com/repos/%s/%s/issues/%s/labels"
+COMMA          = ','
 FAIL_STR       = "Label addition unsuccessful!"
-LABELS_URL     = "repos/%s/%s/issues/%s/labels"
-NEW_LINE       = "\n"
-READ           = "r"
+NEW_LINE       = '\n'
+READ           = 'r'
 SUCCESS_STATUS = 200
 SUCCESS_STR    = """\nLabel addition successful!\n   - Labels: %s   
    - issue number: %s\n   - repo: %s"""
@@ -164,7 +163,7 @@ def create_label_calls( request_type, list_of_userinfo, label_lists ):
         label_str_list = label_list[1]
 
         # complete API call URL
-        call_url = API_URL + LABELS_URL %( user_handle, repo_name, issue_num )
+        call_url = API_URL %( user_handle, repo_name, issue_num )
 
         # serialize label strings into JSON stream 
         payload = json.dumps( label_str_list )
