@@ -8,20 +8,29 @@
 # 
 # ---------------------------------------------------------------------------
 
+# TODO:
+    # add flags to determine type of https request
+        # e.g. "-r" for "replace", meaning PUT request
+        # "-u" for "update", meaning POST request
+        # investigate argparse
 
+
+
+import argparse
 import json
 import requests
-from sys import argv
+from requests import api
+
 
 # constants
-API_URL = "https://api.github.com/"
-COMMA = ","
-FAIL_STR = "Label addition unsuccessful!"
-LABELS_URL = "repos/%s/%s/issues/%s/labels"
-NEW_LINE = "\n"
-READ = "r"
+API_URL        = "https://api.github.com/"
+COMMA          = ","
+FAIL_STR       = "Label addition unsuccessful!"
+LABELS_URL     = "repos/%s/%s/issues/%s/labels"
+NEW_LINE       = "\n"
+READ           = "r"
 SUCCESS_STATUS = 200
-SUCCESS_STR = """\nLabel addition successful!\n   - Labels: %s   
+SUCCESS_STR    = """\nLabel addition successful!\n   - Labels: %s   
    - issue number: %s\n   - repo: %s"""
  
 
@@ -41,11 +50,35 @@ SUCCESS_STR = """\nLabel addition successful!\n   - Labels: %s
 # ---------------------------------------------------------------------------
 def main():
 
-    input_file_to_open = argv[1]
-    userinfo_file_to_open = argv[2]
+    # establish positional argument capability
+    arg_parser = argparse.ArgumentParser( description="""Automated Github
+            issue label assignment""" )
+
+    # add requisite arguments
+    arg_parser.add_argument( '-t', '--request_type', type=str, help="""The type
+            of request to make to the Github API. Valid responses are:
+            \"update\" (u), \"replace\" (r)""" )
+
+    arg_parser.add_argument( 'input_file', type=str, help="""text file
+            containing properly formatted arguments""" )
+
+    arg_parser.add_argument( 'auth_file', type=str, help="""text
+            file containing user authentification info""" )
+
+
+    # retrieve positional arguments
+    CLI_args = arg_parser.parse_args()
+
+    request_type = CLI_args.request_type
+
+    input_file_to_open = CLI_args.input_file
+
+    userauth_file_to_open = CLI_args.auth_file
+
+
 
     # get user info
-    userinfo_list = read_user_info( userinfo_file_to_open )
+    userinfo_list = read_user_info( userauth_file_to_open )
 
 
     # get metalist of input
@@ -61,7 +94,7 @@ def main():
 
 
     # send label metalist to be processed by github api
-    create_label_calls( userinfo_list, label_metalist )
+    create_label_calls( request_type, userinfo_list, label_metalist )
 
 
 
@@ -81,9 +114,9 @@ def main():
 def create_dictionary( input_list ):
     
     # variables
-    label_dict = {}
+    label_dict  = {}
     label_index = 0
-    label_list = input_list[0]
+    label_list  = input_list[0]
 
 
     # loop through every item in list of first row of input file
@@ -110,22 +143,23 @@ def create_dictionary( input_list ):
 # Note: none
 # ---------------------------------------------------------------------------
 
-def create_label_calls( list_of_userinfo, label_lists ):
+def create_label_calls( request_type, list_of_userinfo, label_lists ):
     
     # initialize variables
-    issue_num = None
-    issue_num_str = None
-    label_str = None
-    output_str = None
+    issue_num       = None
+    issue_num_str   = None
+    label_str       = None
+    output_str      = None
     request_outcome = None                   
-    user_handle = list_of_userinfo[0]
-    user_token = list_of_userinfo[1]
+    user_handle     = list_of_userinfo[0]
+    user_token      = list_of_userinfo[1]
  
     request_headers = { 
                         'Content-Type': 'application/json',
                         "Authorization" : "token {}".format( user_token ) 
                       } 
-     
+
+
     # get repo name to add issues to
     repo_name = input( "\nWhat repository would you like to add labels to? " )
 
@@ -143,9 +177,14 @@ def create_label_calls( list_of_userinfo, label_lists ):
         # serialize label strings into JSON stream 
         payload = json.dumps( label_str_list )
 
-        # send labels to Github API
-        request_outcome = requests.put( call_url, data = payload, 
+        # establish type of http request to use and send labels to Github API
+        if request_type == "replace" or "r":
+            request_outcome = requests.put( call_url, data = payload, 
                                             headers = request_headers ) 
+
+        elif request_type == "update" or "u":
+            request_outcome = requests.post( call_url, data = payload, 
+                                             headers = request_headers )  
 
         # return outcome
         if request_outcome.status_code == SUCCESS_STATUS:
@@ -180,10 +219,10 @@ def create_label_calls( list_of_userinfo, label_lists ):
 def create_input_list( fileToOpen ):
  
     # variables
-    loopCounter = 0
+    loopCounter      = 0
     api_list_of_rows = []
-    issue_num_list = []
-    row_list = []
+    issue_num_list   = []
+    row_list         = []
 
 
     # open file
@@ -241,11 +280,11 @@ def parse_input_lists( input_metalist, label_dict ):
 
     # variables
     binary_input_list = None
-    issue_num = None
-    label_list = None
-    label_metalist = []
-    row_index = None
-    row_label_list = []
+    issue_num         = None
+    label_list        = None
+    label_metalist    = []
+    row_index         = None
+    row_label_list    = []
 
 
     # loop through each list in metalist
