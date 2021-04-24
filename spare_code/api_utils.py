@@ -31,8 +31,36 @@ def main(  ):
     elif menu_choice == "3":
         remove_labels() 
 
+    elif menu_choice == "4":
+        get_labels()
+
     # print( menu_choice )
 
+ 
+
+
+def add_labels():
+    user = "jacobPenney"
+    repo = "texts"
+    token = ""
+    issue_number = 1
+    request_headers = { 
+                        'Content-Type': 'application/json',
+                        "Authorization" : "token {}".format( token ) 
+                      } 
+     
+    url_base = "https://api.github.com/"
+    labels_api = "repos/%s/%s/issues/%s/labels" % ( user, repo, issue_number ) 
+
+    label_input = input( "\nWhat labels to include? " )
+
+    payload = json.dumps( [label_input] )
+
+    request_outcome = requests.put( url_base + labels_api, payload,
+                                     headers = request_headers )
+
+    print( request_outcome.json() )   
+ 
 
 
 
@@ -61,28 +89,9 @@ def create_issue():
 
 
 
-def add_labels():
-    user = "jacobPenney"
-    repo = "texts"
-    token = ""
-    issue_number = 1
-    request_headers = { 
-                        'Content-Type': 'application/json',
-                        "Authorization" : "token {}".format( token ) 
-                      } 
-     
-    url_base = "https://api.github.com/"
-    labels_api = "repos/%s/%s/issues/%s/labels" % ( user, repo, issue_number ) 
-
-    label_input = input( "\nWhat labels to include? " )
-
-    payload = json.dumps( [label_input] )
-
-    request_outcome = requests.put( url_base + labels_api, payload,
-                                     headers = request_headers )
-
-    print( request_outcome.json() )   
-
+def get_labels():
+    url_base = "https://api.github.com/repos/%s/%s/issues/%s/labels" %(
+            user, repo, issue_number )  
 
 
 

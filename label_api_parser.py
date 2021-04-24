@@ -17,7 +17,7 @@ import requests
 # constants
 API_URL        = "https://api.github.com/repos/%s/%s/issues/%s/labels"
 COMMA          = ','
-FAIL_STR       = "Label addition unsuccessful!"
+FAIL_STR       = "\nLabel addition unsuccessful!"
 NEW_LINE       = '\n'
 READ           = 'r'
 SUCCESS_STATUS = 200
@@ -45,15 +45,18 @@ def main():
 
 
     # add requisite arguments
-    arg_parser.add_argument( '-t', '--request_type', type=str, help="""The type
-            of request to make to the Github API. Valid responses are:
-            \"update\" (u), \"replace\" (r)""" )
+    arg_parser.add_argument( '-t', '--request_type', type=str,metavar="", 
+                             help="""The type of request to make to the 
+                             Github API. Valid responses are:\"update\" (u), 
+                             \"replace\" (r)""" )
 
-    arg_parser.add_argument( 'input_file', type=str, help="""text file
-            containing properly formatted arguments""" )
+    arg_parser.add_argument( 'input_file', type=str, metavar="", 
+                              help="""input file: text file containing properly 
+                              formatted arguments""" )
 
-    arg_parser.add_argument( 'auth_file', type=str, help="""text
-            file containing user authentification info""" )
+    arg_parser.add_argument( 'auth_file', type=str, metavar="",
+                              help="""auth_file: text file containing user 
+                              authentification info""" )
 
 
     # retrieve positional arguments as variables
@@ -69,18 +72,14 @@ def main():
     # get user info
     userinfo_list = read_user_info( userauth_file_to_open )
 
-
     # get metalist of input
     api_input_list = create_input_list( input_file_to_open )
-
 
     # create dictionary of labels
     label_dictionary = create_dictionary( api_input_list )
 
-
     # create metalist of labels to send to github api
     label_metalist = parse_input_lists( api_input_list, label_dictionary )
-
 
     # send label metalist to be processed by github api
     create_label_calls( request_type, userinfo_list, label_metalist )
@@ -143,13 +142,17 @@ def create_label_calls( request_type, list_of_userinfo, label_lists ):
     user_token      = list_of_userinfo[1]
  
     request_headers = { 
-                        'Content-Type': 'application/json',
-                        "Authorization" : "token {}".format( user_token ) 
+                        'Accept': 'application/vnd.github.v3+json',
+                        "Authorization" : "token {}".format( user_token ),
+                        'Content-Type': 'application/json'
                       } 
 
 
     # get repo name to add issues to
     repo_name = input( "\nWhat repository would you like to add labels to? " )
+
+    # strip whitespace from repo name
+    stripped_repo_name = repo_name.strip()
 
 
     # loop through metalist of labels
@@ -160,18 +163,20 @@ def create_label_calls( request_type, list_of_userinfo, label_lists ):
         label_str_list = label_list[1]
 
         # complete API call URL
-        call_url = API_URL %( user_handle, repo_name, issue_num )
+        call_url = API_URL %( user_handle, stripped_repo_name, issue_num )
 
         # serialize label strings into JSON stream 
         payload = json.dumps( label_str_list )
 
         # establish type of http request to use and send labels to Github API
         if request_type == "replace" or "r":
+            print( "\nReplace chosen\n" )
             request_outcome = requests.put( call_url, data = payload, 
                                             headers = request_headers ) 
 
         elif request_type == "update" or "u":
-            request_outcome = requests.post( call_url, data = payload, 
+            print( "\nUpdate chosen\n" )
+            request_outcome = requests.patch( call_url, data = payload, 
                                              headers = request_headers )  
 
         # return outcome
@@ -186,7 +191,7 @@ def create_label_calls( request_type, list_of_userinfo, label_lists ):
 
         
         else:
-            output_str = FAIL_STR
+             output_str = FAIL_STR
 
 
         print( output_str )
@@ -218,7 +223,6 @@ def create_input_list( fileToOpen ):
 
     # read contents out
     api_input_contents = api_input_file_obj.readlines()
-
 
     # read contents out of file
     for line in api_input_contents:
