@@ -43,26 +43,30 @@ def main():
     arg_parser = argparse.ArgumentParser( description="""Automated Github
             issue label assignment""" )
 
+    # establish mutually exclusive argument capability
+    mutually_excl_args = arg_parser.add_mutually_exclusive_group()
+
 
     # add requisite arguments
-    arg_parser.add_argument( '-t', '--request_type', type=str,metavar="", 
-                             help="""The type of request to make to the 
-                             Github API. Valid responses are:\"update\" (u), 
-                             \"replace\" (r)""" )
+    mutually_excl_args.add_argument( '-u', '--update', action="store_true",
+                                     help="""Adds new labels to already 
+                                     existing labels""" )
 
-    arg_parser.add_argument( 'input_file', type=str, metavar="", 
-                              help="""input file: text file containing properly 
+    mutually_excl_args.add_argument( '-r', '--replace', action="store_true",
+                                     help="""Replaces existing labels with new
+                                     labels""" )
+
+    arg_parser.add_argument( 'input_file', type=str,  
+                              help="""text file containing properly 
                               formatted arguments""" )
 
-    arg_parser.add_argument( 'auth_file', type=str, metavar="",
-                              help="""auth_file: text file containing user 
+    arg_parser.add_argument( 'auth_file', type=str, 
+                              help="""text file containing user 
                               authentification info""" )
 
 
     # retrieve positional arguments as variables
     CLI_args = arg_parser.parse_args()
-
-    request_type = CLI_args.request_type
 
     input_file_to_open = CLI_args.input_file
 
@@ -82,7 +86,11 @@ def main():
     label_metalist = parse_input_lists( api_input_list, label_dictionary )
 
     # send label metalist to be processed by github api
-    create_label_calls( request_type, userinfo_list, label_metalist )
+    if CLI_args.replace:
+        create_label_calls( "replace", userinfo_list, label_metalist )
+
+    elif CLI_args.update:
+        create_label_calls( "update", userinfo_list, label_metalist )
 
 
 
@@ -169,14 +177,12 @@ def create_label_calls( request_type, list_of_userinfo, label_lists ):
         payload = json.dumps( label_str_list )
 
         # establish type of http request to use and send labels to Github API
-        if request_type == "replace" or "r":
-            print( "\nReplace chosen\n" )
+        if request_type == "replace":
             request_outcome = requests.put( call_url, data = payload, 
                                             headers = request_headers ) 
 
-        elif request_type == "update" or "u":
-            print( "\nUpdate chosen\n" )
-            request_outcome = requests.patch( call_url, data = payload, 
+        elif request_type == "update":
+            request_outcome = requests.post( call_url, data = payload, 
                                              headers = request_headers )  
 
         # return outcome
