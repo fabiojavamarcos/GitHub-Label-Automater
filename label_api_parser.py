@@ -38,38 +38,10 @@ SUCCESS_STR    = """\nLabel addition successful!\n   - Labels: %s
 # Note: none       
 # ---------------------------------------------------------------------------
 def main():
-
-    # establish positional argument capability
-    arg_parser = argparse.ArgumentParser( description="""Automated Github
-            issue label assignment""" )
-
-    # establish mutually exclusive argument capability
-    mutually_excl_args = arg_parser.add_mutually_exclusive_group()
-
-
-    # add requisite arguments
-    mutually_excl_args.add_argument( '-u', '--update', action="store_true",
-                                     help="""Adds new labels to already 
-                                     existing labels""" )
-
-    mutually_excl_args.add_argument( '-r', '--replace', action="store_true",
-                                     help="""Replaces existing labels with new
-                                     labels""" )
-
-    arg_parser.add_argument( 'input_file', type=str,  
-                              help="""text file containing properly 
-                              formatted arguments""" )
-
-    arg_parser.add_argument( 'auth_file', type=str, 
-                              help="""text file containing user 
-                              authentification info""" )
-
-
     # retrieve positional arguments as variables
-    CLI_args = arg_parser.parse_args()
+    CLI_args = get_args()
 
     input_file_to_open = CLI_args.input_file
-
     userauth_file_to_open = CLI_args.auth_file
 
 
@@ -259,6 +231,47 @@ def create_input_list( fileToOpen ):
 
 
     return api_list_of_rows
+
+
+
+
+#--------------------------------------------------------------------------- 
+# Function name : 
+# Process       : 
+# Parameters    : 
+# Postconditions: 
+# Notes         : 
+#--------------------------------------------------------------------------- 
+def get_args():
+    # establish positional argument capability
+    arg_parser = argparse.ArgumentParser( description="""Automated Github
+            issue label assignment""" )
+
+    # establish mutually exclusive argument capability
+    mutually_excl_args = arg_parser.add_mutually_exclusive_group()
+
+
+    # add requisite arguments
+    mutually_excl_args.add_argument( '-u', '--update', action="store_true",
+                                     help="""Adds new labels to already 
+                                     existing labels""" )
+
+    mutually_excl_args.add_argument( '-r', '--replace', action="store_true",
+                                     help="""Replaces existing labels with new
+                                     labels""" )
+
+    arg_parser.add_argument( 'input_file', type=str,  
+                              help="""text file containing properly 
+                              formatted arguments""" )
+
+    arg_parser.add_argument( 'auth_file', type=str, 
+                              help="""text file containing user 
+                              authentification info""" ) 
+
+    
+    CLI_args = arg_parser.parse_args()
+
+    return CLI_args
 
 
 
