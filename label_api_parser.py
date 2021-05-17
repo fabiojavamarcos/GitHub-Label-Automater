@@ -38,12 +38,13 @@ SUCCESS_STR    = """\nLabel addition successful!\n   - Labels: %s
 # Note: none       
 # ---------------------------------------------------------------------------
 def main():
+
     # retrieve positional arguments as variables
     CLI_args = get_args()
 
+    # gather args
     input_file_to_open = CLI_args.input_file
     userauth_file_to_open = CLI_args.auth_file
-
 
     # get user info
     userinfo_list = read_user_info( userauth_file_to_open )
@@ -169,7 +170,8 @@ def create_label_calls( request_type, list_of_userinfo, label_lists ):
 
         
         else:
-             output_str = FAIL_STR
+            error_msg = ( "Error message: " + str( request_outcome ) )
+            output_str = FAIL_STR + "\n" + error_msg
 
 
         print( output_str )
@@ -271,6 +273,7 @@ def get_args():
     
     CLI_args = arg_parser.parse_args()
 
+
     return CLI_args
 
 
@@ -355,7 +358,7 @@ def read_user_info( userinfo_file ):
 
     # loop through items in list 
     for value in userinfo_list:
-        
+
         # remove newline chars from each item in list
         newLine_stripped_value = value.strip( NEW_LINE )
         
@@ -365,7 +368,6 @@ def read_user_info( userinfo_file ):
         # place each item into a new list if it has content
         if len( space_stripped_value ) > 0:
             parsed_userinfo_list.append( space_stripped_value )
-
 
     return parsed_userinfo_list
 
